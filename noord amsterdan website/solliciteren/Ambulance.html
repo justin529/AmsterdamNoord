@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sollicitatieformulier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00ffff ;
+        }
+        form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #00ffff ;
+            color: rgb(0, 0, 0);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #00ffff ;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sollicitatieformulier</h1>
+    <form id="sollicitatieForm">
+        <label for="naam">Naam:</label>
+        <input type="text" id="naam" name="naam" required>
+
+        <label for="leeftijd">Leeftijd:</label>
+        <input type="number" id="leeftijd" name="leeftijd" required>
+
+        <label for="discord">Discord-gebruikersnaam:</label>
+        <input type="text" id="discord" name="discord" required>
+
+        <label for="motivatie">Motivatie:</label><br>
+        <textarea id="motivatie" name="motivatie" rows="4" required></textarea>
+
+        <label for="pluspunten">Drie pluspunten:</label><br>
+        <input type="text" id="pluspunt1" name="pluspunten" placeholder="Pluspunt 1" required>
+        <input type="text" id="pluspunt2" name="pluspunten" placeholder="Pluspunt 2" required>
+        <input type="text" id="pluspunt3" name="pluspunten" placeholder="Pluspunt 3" required>
+
+        <label for="minpunten">Drie minpunten:</label><br>
+        <input type="text" id="minpunt1" name="minpunten" placeholder="Minpunt 1" required>
+        <input type="text" id="minpunt2" name="minpunten" placeholder="Minpunt 2" required>
+        <input type="text" id="minpunt3" name="minpunten" placeholder="Minpunt 3" required>
+
+        <button type="submit">Verstuur sollicitatie</button>
+    </form>
+
+    <script>
+        document.getElementById('sollicitatieForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const naam = document.getElementById('naam').value;
+            const leeftijd = document.getElementById('leeftijd').value;
+            const discord = document.getElementById('discord').value;
+            const motivatie = document.getElementById('motivatie').value;
+            const pluspunten = [
+                document.getElementById('pluspunt1').value,
+                document.getElementById('pluspunt2').value,
+                document.getElementById('pluspunt3').value
+            ];
+            const minpunten = [
+                document.getElementById('minpunt1').value,
+                document.getElementById('minpunt2').value,
+                document.getElementById('minpunt3').value
+            ];
+
+            const webhookUrl = 'https://discord.com/api/webhooks/1295855661200048188/p1f96e0yJvtKyJsoeOwBTynH47KeO-gJRwjOAmW4lbqFAxr9E6x4pBFuYNjWmMKzgR3A';
+
+            const data = {
+                embeds: [{
+                    title: "Nieuwe sollicitatie",
+                    fields: [
+                        { name: "Naam", value: naam, inline: true },
+                        { name: "Leeftijd", value: leeftijd, inline: true },
+                        { name: "Discord", value: discord, inline: true },
+                        { name: "Motivatie", value: motivatie },
+                        { name: "Pluspunten", value: pluspunten.join(', ') },
+                        { name: "Minpunten", value: minpunten.join(', ') }
+                    ],
+                    color: 3447003 // Bijvoorbeeld een groene kleur
+                }]
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = 'success.html'; // Redirect naar succespagina
+                } else {
+                    alert('Fout bij het verzenden van het bericht.');
+                }
+            })
+            .catch(error => {
+                console.error('Fout:', error);
+            });
+        });
+    </script>
+</body>
+</html>
